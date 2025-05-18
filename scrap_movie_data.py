@@ -15,22 +15,18 @@ def fetch_imdb(movie_id):
         if poster_tag and poster_tag.has_attr('src'):
             poster_url = poster_tag['src']
 
-        # Genre (rounded boxes below poster/trailer)
         genres = [g.text.strip() for g in soup.select('div.ipc-chip-list--baseAlt span.ipc-chip__text')]
         genres = ', '.join(genres)
 
-        # Top 5 actors (under "Top cast")
         actors = [a.text.strip() for a in soup.select('a[data-testid="title-cast-item__actor"]')]
         actors = ', '.join(actors[:5])
 
-        # Director(s)
         director = ''
         director_section = soup.find('li', attrs={'data-testid': 'title-pc-principal-credit'})
         if director_section:
             director_links = director_section.select('a')
             director = ', '.join([a.text.strip() for a in director_links])
 
-        # Number of votes (right below IMDb rating, handles K/M abbreviations)
         votes = ''
         votes_tag = soup.find('span', {'data-testid': 'rating-histogram-vote-count'})
         if votes_tag:
@@ -68,14 +64,11 @@ if __name__ == "__main__":
         if col not in df.columns:
             df[col] = ''
 
-    # Take user input for batch scraping
     start_index = int(input("Enter starting index (0-based): "))
     batch_size = int(input("Enter number of movies to scrape: "))
 
-    # Select the subset to process
     subset = df.iloc[start_index : start_index + batch_size]
 
-    # Map movie_id to DataFrame index for correct updating
     movieid_to_index = {row['movie_id']: idx for idx, row in subset.iterrows()}
 
     results = []
