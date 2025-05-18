@@ -10,7 +10,6 @@ def fetch_imdb(movie_id):
         r = requests.get(url, headers=headers, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
 
-        # Poster (just below title)
         poster_url = ''
         poster_tag = soup.select_one('div[data-testid="hero-media__poster"] img')
         if poster_tag and poster_tag.has_attr('src'):
